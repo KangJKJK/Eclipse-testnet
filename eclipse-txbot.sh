@@ -189,7 +189,7 @@ if [ -d "testnet-deposit" ]; then
     execute_and_prompt "testnet-deposit 폴더를 제거하는 중입니다..." "rm -rf testnet-deposit"
 fi
 
-read -p "Solana 주소를 입력하세요. 위에 초록색으로 나온 주소와 같습니다.: " solana_address
+read -p "사용중인 Solana 주소를 입력하세요.: " solana_address
 read -p "Ethereum 개인키를 입력하세요: " ethereum_private_key
 read -p "브릿징 트랜잭션 반복 횟수 입력 (1-5 추천): " repeat_count
 echo
