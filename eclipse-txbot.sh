@@ -191,27 +191,27 @@ echo
 for ((i=1; i<=repeat_count; i++)); do
     echo -e "${YELLOW}브리지 스크립트 실행 (트랜잭션 $i)...${NC}"
     echo
-    node bin/cli.js -k pvt-key.txt -d "$solana_address" -a 0.01 --sepolia
+    node bin/cli.js -k pvt-key.txt -d "$solana_address" -a 0.001 --sepolia
     echo
     sleep 3
 done
 
 echo -e "${RED}브릿징 컨펌을 위해 4분 정도 소요됩니다. 아무 것도 하지 말고 기다리세요.${NC}"
-echo
+sleep 240
 
 # 토큰 생성
 echo -e "${YELLOW}토큰을 생성하는 중입니다...${NC}"
-sleep 240
 TOKEN_CREATION_OUTPUT=$(spl-token create-token --enable-metadata -p TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
 echo "$TOKEN_CREATION_OUTPUT"
 
 # 토큰 주소 추출
+echo -e "${YELLOW}토큰 주소를 추출하는 중입니다...${NC}"
 TOKEN_ADDRESS=$(echo "$TOKEN_CREATION_OUTPUT" | grep -oP '(?<=Token Address: )\S+')
 echo "토큰 주소: $TOKEN_ADDRESS"
 
-# 토큰 계좌 생성
-echo -e "${YELLOW}토큰 계좌를 생성하는 중입니다...${NC}"
-execute_and_prompt "토큰 계좌를 생성하는 중입니다..." "spl-token create-account $TOKEN_ADDRESS"
+# 토큰 어카운트 생성
+echo -e "${YELLOW}토큰 어카운트를 생성하는 중입니다...${NC}"
+execute_and_prompt "토큰 어카운트를 생성하는 중입니다..." "spl-token create-account $TOKEN_ADDRESS"
 
 # 토큰 발행
 echo -e "${YELLOW}토큰을 발행하는 중입니다...${NC}"
@@ -242,7 +242,7 @@ node private-key.cjs
 echo
 echo -e "${YELLOW}다음 경로에 있는 파일에 중요한 정보가 저장되어 있습니다.:${NC}"
 echo -e "Solana 개인키 파일: $HOME/my-wallet.json"
-echo -e "Ethereum 비밀키 파일: $HOME/pvt-key.txt"
+echo -e "Ethereum 개인키 파일: $HOME/pvt-key.txt"
 echo -e "MetaMask 시드 문구 파일: $HOME/secrets.json"
 echo -e "${GREEN}새지갑을 만든 경우 비밀키를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 echo -e "${GREEN}스크립트작성자-https://t.me/kjkresearch${NC}"
