@@ -24,7 +24,6 @@ echo -e "${YELLOW}Rust를 설치하는 중입니다...${NC}"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
 rustup install stable
-rustup default stable
 export PATH="$HOME/.cargo/bin:$PATH"
 echo -e "${GREEN}Rust가 설치되었습니다: $(rustc --version)${NC}"
 echo
@@ -66,13 +65,11 @@ echo
 echo -e "${YELLOW}Solana CLI를 제거하는 중입니다...${NC}"
 echo
 rm -rf ~/.local/share/solana
-export PATH="/path/to/solana-cli:$PATH"
-source ~/.bashrc
 
 # Solana CLI 설치
 echo -e "${YELLOW}Solana CLI를 설치하는 중입니다...${NC}"
 echo
-sh -c "$(curl -sSfL https://release.solana.com/v1.17.34/install)"
+sh -c "$(curl -sSfL https://release.solana.com/v1.18.15/install)"
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 source ~/.bashrc
 
@@ -216,9 +213,9 @@ echo
 
 # Cargo.toml 파일 수정 및 의존성 업데이트
 echo -e "${YELLOW}Cargo.toml 파일을 수정하고 의존성을 업데이트하는 중입니다...${NC}"
-sed -i 's/^solana-program = ".*"/solana-program = "1.17.34"/' src/program-rust/Cargo.toml
-sed -i 's/^solana-sdk = ".*"/solana-sdk = "1.17.34"/' src/program-rust/Cargo.toml
-sed -i 's/^solana-program-test = ".*"/solana-program-test = "1.17.34"/' src/program-rust/Cargo.toml
+sed -i 's/^solana-program = ".*"/solana-program = "1.18.15"/' src/program-rust/Cargo.toml
+sed -i 's/^solana-sdk = ".*"/solana-sdk = "1.18.15"/' src/program-rust/Cargo.toml
+sed -i 's/^solana-program-test = ".*"/solana-program-test = "1.18.15"/' src/program-rust/Cargo.toml
 
 # Cargo 업데이트
 echo -e "${YELLOW}Cargo를 업데이트하는 중입니다...${NC}"
@@ -234,7 +231,7 @@ npm install bs58@4.0.1
 echo
 
 # 스마트 컨트랙 빌드
-echo -e "${YELLOW}스마트 컨트랙을 빌드하는 중입니다...시간이 오래 걸립니다.${NC}"
+echo -e "${YELLOW}스마트 컨트랙을 빌드하는 중입니다...시간이 조금 걸립니다.${NC}"
 npm run build:program-rust
 echo
 
