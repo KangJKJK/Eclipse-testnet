@@ -202,7 +202,7 @@ echo
 execute_and_prompt "토큰 계좌를 확인하는 중입니다..." "spl-token accounts"
 echo
 
-# @solana/web3.js 설치 및 개인키 출력
+# @solana/web3.js 설치 및 비밀키 출력
 cd $HOME
 
 echo -e "${YELLOW}@solana/web3.js를 설치하는 중입니다...${NC}"
@@ -212,28 +212,32 @@ echo
 
 ENCRYPTED_KEY=$(cat my-wallet.json)
 
-cat <<EOF > private-key.js
+cat <<EOF > private-key.cjs
 const solanaWeb3 = require('@solana/web3.js');
 
-const byteArray = $ENCRYPTED_KEY;
+const byteArray = JSON.parse(process.env.ENCRYPTED_KEY);
 
 const secretKey = new Uint8Array(byteArray);
 
 const keypair = solanaWeb3.Keypair.fromSecretKey(secretKey);
 
 console.log("Solana 주소:", keypair.publicKey.toBase58());
-console.log("Solana 지갑의 개인키:", Buffer.from(keypair.secretKey).toString('hex'));
+console.log("Solana 지갑의 비밀키:", Buffer.from(keypair.secretKey).toString('hex'));
 EOF
 
-node private-key.js
+# 환경 변수 설정
+export ENCRYPTED_KEY="$(cat my-wallet.json)"
+
+node private-key.cjs
 
 echo
 echo -e "${YELLOW}다음 파일에 중요한 정보가 저장되어 있습니다:${NC}"
 echo -e "Solana 개인키 파일: $HOME/my-wallet.json"
-echo -e "Ethereum 개인키 파일: $HOME/pvt-key.txt"
+echo -e "Ethereum 비밀키 파일: $HOME/pvt-key.txt"
 echo -e "MetaMask 시드 문구 파일: $HOME/secrets.json"
-echo -e "${GREEN}새지갑을 만든 경우 복구문자를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
+echo -e "${GREEN}새지갑을 만든 경우 비밀키를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 echo
 execute_and_prompt "프로그램 주소 확인 중..." "solana address"
 echo
 echo -e "${GREEN}완료되었습니다.${NC}"
+
