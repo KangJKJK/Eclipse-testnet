@@ -62,7 +62,8 @@ git clone https://github.com/Eclipse-Laboratories-Inc/testnet-deposit
 cd testnet-deposit
 
 # npm 인스톨
-npm install
+apt install npm
+npm install bs58@latest
 echo
 
 # Solana CLI 설치
