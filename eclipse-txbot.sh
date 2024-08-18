@@ -191,7 +191,7 @@ echo
 for ((i=1; i<=repeat_count; i++)); do
     echo -e "${YELLOW}브리지 스크립트 실행 (트랜잭션 $i)...${NC}"
     echo
-    node bin/cli.js -k pvt-key.txt -d "$solana_address" -a 0.001 --sepolia
+    node bin/cli.js -k pvt-key.txt -d "$solana_address" -a 0.003 --sepolia
     echo
     sleep 3
 done
