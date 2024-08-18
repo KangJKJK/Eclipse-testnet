@@ -1,3 +1,24 @@
+#!/bin/bash
+
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export YELLOW='\033[1;33m'
+export NC='\033[0m'
+
+prompt() {
+    local message="$1"
+    read -p "$message" input
+    echo "$input"
+}
+
+execute_and_prompt() {
+    local message="$1"
+    local command="$2"
+    echo -e "${YELLOW}${message}${NC}"
+    eval "$command"
+    echo -e "${GREEN}Done.${NC}"
+}
+
 # Rust 설치
 echo -e "${YELLOW}Rust를 설치하는 중입니다...${NC}"
 echo
@@ -68,19 +89,23 @@ elif [ "$choice" -eq 2 ]; then
     read -p "Solana 개인키를 입력하세요 (base58로 인코딩된 문자열): " solana_private_key
 
     # Solana 개인키를 base58에서 바이너리로 변환
-    cat <<EOF > decode-private-key.js
+    cat <<EOF > decode-private-key.cjs
 const { Keypair } = require('@solana/web3.js');
 const bs58 = require('bs58');
 const fs = require('fs');
 
-const privateKeyBase58 = "$solana_private_key";
+const privateKeyBase58 = process.env.SOLANA_PRIVATE_KEY;
 const privateKeyBytes = bs58.decode(privateKeyBase58);
 
 const keypair = Keypair.fromSecretKey(privateKeyBytes);
-fs.writeFileSync('$WALLET_FILE', JSON.stringify(Array.from(keypair.secretKey)), 'utf8');
+fs.writeFileSync(process.env.WALLET_FILE, JSON.stringify(Array.from(keypair.secretKey)), 'utf8');
 
-console.log('Solana 지갑 파일이 저장되었습니다:', '$WALLET_FILE');
+console.log('Solana 지갑 파일이 저장되었습니다:', process.env.WALLET_FILE);
 EOF
+
+    # 환경 변수 설정
+    export SOLANA_PRIVATE_KEY="$solana_private_key"
+    export WALLET_FILE="$WALLET_FILE"
 
     # 필요한 Node.js 패키지 설치
     if ! npm list bs58 &>/dev/null; then
@@ -90,7 +115,7 @@ EOF
         echo
     fi
 
-    node decode-private-key.js
+    node decode-private-key.cjs
 else
     echo -e "${RED}잘못된 선택입니다. 종료합니다.${NC}"
     exit 1
@@ -177,7 +202,7 @@ echo
 execute_and_prompt "토큰 계좌를 확인하는 중입니다..." "spl-token accounts"
 echo
 
-# @solana/web3.js 설치 및 비밀키 출력
+# @solana/web3.js 설치 및 개인키 출력
 cd $HOME
 
 echo -e "${YELLOW}@solana/web3.js를 설치하는 중입니다...${NC}"
@@ -197,7 +222,7 @@ const secretKey = new Uint8Array(byteArray);
 const keypair = solanaWeb3.Keypair.fromSecretKey(secretKey);
 
 console.log("Solana 주소:", keypair.publicKey.toBase58());
-console.log("Solana 지갑의 비밀키:", Buffer.from(keypair.secretKey).toString('hex'));
+console.log("Solana 지갑의 개인키:", Buffer.from(keypair.secretKey).toString('hex'));
 EOF
 
 node private-key.js
@@ -205,10 +230,10 @@ node private-key.js
 echo
 echo -e "${YELLOW}다음 파일에 중요한 정보가 저장되어 있습니다:${NC}"
 echo -e "Solana 개인키 파일: $HOME/my-wallet.json"
-echo -e "Ethereum 비밀키 파일: $HOME/pvt-key.txt"
+echo -e "Ethereum 개인키 파일: $HOME/pvt-key.txt"
 echo -e "MetaMask 시드 문구 파일: $HOME/secrets.json"
-echo -e "${GREEN}새지갑을 만든 경우 비밀키를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
+echo -e "${GREEN}새지갑을 만든 경우 복구문자를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 echo
 execute_and_prompt "프로그램 주소 확인 중..." "solana address"
 echo
-echo -e "${Y
+echo -e "${GREEN}완료되었습니다.${NC}"
