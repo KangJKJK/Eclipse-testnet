@@ -200,12 +200,11 @@ EOF
 node private-key.js
 
 echo
-echo -e "${GREEN}이 비밀키를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
-echo
 echo -e "${YELLOW}다음 파일에 중요한 정보가 저장되어 있습니다:${NC}"
 echo -e "Solana 개인키 파일: $HOME/my-wallet.json"
 echo -e "Ethereum 비밀키 파일: $HOME/pvt-key.txt"
 echo -e "MetaMask 시드 문구 파일: $HOME/secrets.json"
+echo -e "${GREEN}새지갑을 만든 경우 비밀키를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 echo
 execute_and_prompt "프로그램 주소 확인 중..." "solana address"
 echo
