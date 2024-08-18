@@ -108,7 +108,7 @@ const fs = require('fs');
 const privateKeyBase58 = process.env.SOLANA_PRIVATE_KEY;
 
 // base58 인코딩된 개인키를 디코딩하여 바이너리 형식으로 변환합니다.
-const privateKeyBytes = bs58.decode(privateKeyBase58);
+const privateKeyBytes = Buffer.from(bs58.decode(privateKeyBase58));
 
 // 바이너리 형식의 개인키로부터 Keypair 객체를 생성합니다.
 const keypair = Keypair.fromSecretKey(privateKeyBytes);
