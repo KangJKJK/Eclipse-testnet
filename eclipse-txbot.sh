@@ -70,6 +70,7 @@ echo
 echo -e "${YELLOW}Solana CLI를 설치하는 중입니다...${NC}"
 echo
 sh -c "$(curl -sSfL https://release.solana.com/v1.14.15/install)"
+sudo apt install spl-token-cli
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
 echo -e "${GREEN}Solana CLI가 설치되었습니다: $(solana --version)${NC}"
@@ -202,7 +203,7 @@ for ((i=1; i<=repeat_count; i++)); do
 done
 
 echo -e "${RED}브릿징 컨펌을 위해 4분 정도 소요됩니다. 아무 것도 하지 말고 기다리세요.${NC}"
-sleep 1
+sleep 240
 
 echo -e "${YELLOW}Solana Hello World 레포지토리를 클론하는 중입니다...${NC}"
 echo
@@ -226,8 +227,8 @@ echo
 solana program deploy dist/program/helloworld.so
 echo
 
-# 계약이 성공적으로 배포되었는지 확인
-echo -e "${YELLOW}계약이 성공적으로 배포되었는지 확인하는 중입니다...${NC}"
+# 컨트랙이 성공적으로 배포되었는지 확인
+echo -e "${YELLOW}컨트랙이 성공적으로 배포되었는지 확인하는 중입니다...${NC}"
 echo
 npm run start
 echo
