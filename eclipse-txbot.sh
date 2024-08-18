@@ -57,13 +57,11 @@ fi
 # 레포지토리 클론 및 npm 의존성 설치
 echo -e "${YELLOW}레포지토리를 클론하고 npm 의존성을 설치하는 중입니다...${NC}"
 echo
+sudo apt update && sudo apt install git
 git clone https://github.com/Eclipse-Laboratories-Inc/testnet-deposit
 cd testnet-deposit
 
-# 특정 버전의 bs58 패키지 설치
-echo -e "${YELLOW}bs58 패키지 버전 4.0.1을 설치하는 중입니다...${NC}"
-npm install bs58@4.0.1
-
+# npm 인스톨
 npm install
 echo
 
@@ -211,8 +209,8 @@ git clone https://github.com/solana-labs/example-helloworld
 cd example-helloworld
 echo
 
-# 종속성 설치
-echo -e "${YELLOW}종속성 설치 중입니다...${NC}"
+# 프로젝트 빌드
+echo "프로젝트를 빌드하는 중입니다..."
 npm install
 echo
 
