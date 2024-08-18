@@ -202,8 +202,8 @@ for ((i=1; i<=repeat_count; i++)); do
     sleep 3
 done
 
-echo -e "${RED}브릿징 컨펌을 위해 4분 정도 소요됩니다. 아무 것도 하지 말고 기다리세요.${NC}"
-sleep 1
+echo -e "${RED}브릿징 컨펌을 위해 4분 정도 대기합니다. 아무 것도 누르지 말고 기다리세요.${NC}"
+sleep 240
 
 echo -e "${YELLOW}Solana Hello World 레포지토리를 클론하는 중입니다...${NC}"
 echo
