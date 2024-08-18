@@ -210,13 +210,13 @@ echo -e "${YELLOW}종속성 설치 중입니다...${NC}"
 npm install
 echo
 
-# 스마트 계약 빌드
-echo -e "${YELLOW}스마트 계약을 빌드하는 중입니다...${NC}"
+# 스마트 컨트랙 빌드
+echo -e "${YELLOW}스마트 컨트랙을 빌드하는 중입니다...시간이 오래 걸립니다.${NC}"
 npm run build:program-rust
 echo
 
-# Eclipse Testnet에 스마트 계약 배포
-echo -e "${YELLOW}Eclipse Testnet에 스마트 계약을 배포하는 중입니다...${NC}"
+# Eclipse Testnet에 스마트 컨트랙 배포
+echo -e "${YELLOW}Eclipse Testnet에 컨트랙을 배포하는 중입니다...${NC}"
 echo
 solana program deploy dist/program/helloworld.so
 echo
@@ -234,17 +234,19 @@ cd $HOME
 execute_and_prompt "토큰을 생성하는 중입니다..." "spl-token create-token --enable-metadata -p TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
 echo
 
+# 사용자 토큰 주소를 입력받음
+echo -e "${YELLOW}위에 출력된 Token address를 그대로 입력하세요.${NC}"
 token_address=$(prompt "Enter your Token Address: ")
 echo
 
-# 토큰 어카운트 생성
-echo -e "${YELLOW}토큰 어카운트를 생성하는 중입니다...${NC}"
-execute_and_prompt "토큰 어카운트를 생성하는 중입니다..." "spl-token create-account $TOKEN_ADDRESS"
+# 토큰 계좌 생성
+echo -e "${YELLOW}토큰 계좌를 생성하는 중입니다...${NC}"
+execute_and_prompt "토큰 계좌를 생성하는 중입니다..." "spl-token create-account $token_address"
 echo
 
 # 토큰 발행
 echo -e "${YELLOW}토큰을 발행하는 중입니다...${NC}"
-execute_and_prompt "토큰을 발행하는 중입니다..." "spl-token mint $TOKEN_ADDRESS 10000"
+execute_and_prompt "토큰을 발행하는 중입니다..." "spl-token mint $token_address 10000"
 
 # @solana/web3.js 설치 및 비밀키 출력
 cd $HOME
