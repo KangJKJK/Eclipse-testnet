@@ -94,10 +94,16 @@ const { Keypair } = require('@solana/web3.js');
 const bs58 = require('bs58');
 const fs = require('fs');
 
+// 환경 변수로부터 개인키를 가져옵니다.
 const privateKeyBase58 = process.env.SOLANA_PRIVATE_KEY;
+
+// base58 인코딩된 개인키를 디코딩하여 바이너리 형식으로 변환합니다.
 const privateKeyBytes = bs58.decode(privateKeyBase58);
 
+// 바이너리 형식의 개인키로부터 Keypair 객체를 생성합니다.
 const keypair = Keypair.fromSecretKey(privateKeyBytes);
+
+// 지갑 파일로 Keypair의 비밀키를 저장합니다.
 fs.writeFileSync(process.env.WALLET_FILE, JSON.stringify(Array.from(keypair.secretKey)), 'utf8');
 
 console.log('Solana 지갑 파일이 저장되었습니다:', process.env.WALLET_FILE);
@@ -240,4 +246,3 @@ echo
 execute_and_prompt "프로그램 주소 확인 중..." "solana address"
 echo
 echo -e "${GREEN}완료되었습니다.${NC}"
-
