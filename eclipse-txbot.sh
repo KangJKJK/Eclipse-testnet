@@ -63,7 +63,7 @@ cd testnet-deposit
 
 # npm 인스톨
 apt install npm
-npm install bs58@latest
+npm install bs58@4.0.1
 echo
 
 # Solana CLI 설치
