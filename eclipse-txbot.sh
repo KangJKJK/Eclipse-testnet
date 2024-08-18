@@ -211,7 +211,7 @@ echo
 
 # 프로젝트 빌드
 echo "프로젝트를 빌드하는 중입니다..."
-npm install
+npm install bs58@4.0.1
 echo
 
 # 스마트 컨트랙 빌드
