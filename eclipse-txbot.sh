@@ -68,7 +68,7 @@ echo
 # Solana 지갑 생성 또는 복구
 echo -e "${YELLOW}옵션을 선택하세요:${NC}"
 echo -e "1) 새로운 Solana 지갑 생성"
-echo -e "2) 기존 Solana 지갑 복구"
+echo -e "2) 개인키로 Solana 지갑 복구"
 
 read -p "선택지를 입력하세요 (1 또는 2): " choice
 
@@ -85,8 +85,9 @@ if [ "$choice" -eq 1 ]; then
     solana-keygen new -o "$WALLET_FILE"
     echo -e "${YELLOW}이 시드 문구를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 elif [ "$choice" -eq 2 ]; then
-    echo -e "${YELLOW}기존 Solana 키페어를 복구하는 중입니다...${NC}"
-    solana-keygen recover -o "$WALLET_FILE"
+    echo -e "${YELLOW}개인키를 사용하여 Solana 키페어를 복구하는 중입니다...${NC}"
+    read -p "Solana 개인키를 입력하세요 (base58로 인코딩된 문자열): " solana_private_key
+    echo "$solana_private_key" | base58 -d > "$WALLET_FILE"
 else
     echo -e "${RED}잘못된 선택입니다. 종료합니다.${NC}"
     exit 1
@@ -201,7 +202,11 @@ node private-key.js
 echo
 echo -e "${GREEN}이 비밀키를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 echo
+echo -e "${YELLOW}다음 파일에 중요한 정보가 저장되어 있습니다:${NC}"
+echo -e "Solana 개인키 파일: $HOME/my-wallet.json"
+echo -e "Ethereum 비밀키 파일: $HOME/pvt-key.txt"
+echo -e "MetaMask 시드 문구 파일: $HOME/secrets.json"
+echo
 execute_and_prompt "프로그램 주소 확인 중..." "solana address"
 echo
-echo -e "${YELLOW}피드백 제출 링크:${NC} https://docs.google.com/forms/d/e/1FAIpQLSfJQCFBKHpiy2HVw9lTjCj7k0BqNKnP6G1cd0YdKhaPLWD-AA/viewform?pli=1"
-echo
+echo -e "${Y
