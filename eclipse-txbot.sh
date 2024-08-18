@@ -21,16 +21,12 @@ execute_and_prompt() {
 
 # Rust 설치
 echo -e "${YELLOW}Rust를 설치하는 중입니다...${NC}"
-echo
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
+rustup install stable
+rustup default stable
+export PATH="$HOME/.cargo/bin:$PATH"
 echo -e "${GREEN}Rust가 설치되었습니다: $(rustc --version)${NC}"
-echo
-
-# Rust 업데이트
-echo -e "${YELLOW}Rust를 최신 버전으로 업데이트하는 중입니다...${NC}"
-rustup update
-echo -e "${GREEN}Rust가 최신 버전으로 업데이트되었습니다.${NC}"
 echo
 
 # NVM 설치
@@ -66,11 +62,19 @@ apt install npm
 npm install bs58@4.0.1
 echo
 
+# Solana CLI 제거
+echo -e "${YELLOW}Solana CLI를 제거하는 중입니다...${NC}"
+echo
+rm -rf ~/.local/share/solana
+export PATH="/path/to/solana-cli:$PATH"
+source ~/.bashrc
+
 # Solana CLI 설치
 echo -e "${YELLOW}Solana CLI를 설치하는 중입니다...${NC}"
 echo
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.22/install)"
+sh -c "$(curl -sSfL https://release.solana.com/v1.17.34/install)"
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+source ~/.bashrc
 
 echo -e "${GREEN}Solana CLI가 설치되었습니다: $(solana --version)${NC}"
 echo
@@ -208,6 +212,20 @@ echo -e "${YELLOW}Solana Hello World 레포지토리를 클론하는 중입니�
 echo
 git clone https://github.com/solana-labs/example-helloworld
 cd example-helloworld
+echo
+
+# Cargo.toml 파일 수정 및 의존성 업데이트
+echo -e "${YELLOW}Cargo.toml 파일을 수정하고 의존성을 업데이트하는 중입니다...${NC}"
+sed -i 's/^solana-program = ".*"/solana-program = "1.17.34"/' src/program-rust/Cargo.toml
+sed -i 's/^solana-sdk = ".*"/solana-sdk = "1.17.34"/' src/program-rust/Cargo.toml
+sed -i 's/^solana-program-test = ".*"/solana-program-test = "1.17.34"/' src/program-rust/Cargo.toml
+
+# Cargo 업데이트
+echo -e "${YELLOW}Cargo를 업데이트하는 중입니다...${NC}"
+cd src/program-rust
+rm -f Cargo.lock
+cargo update
+cd ../..
 echo
 
 # 프로젝트 빌드
