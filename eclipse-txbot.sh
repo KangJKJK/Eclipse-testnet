@@ -27,6 +27,12 @@ source "$HOME/.cargo/env"
 echo -e "${GREEN}Rust가 설치되었습니다: $(rustc --version)${NC}"
 echo
 
+# Rust 업데이트
+echo -e "${YELLOW}Rust를 최신 버전으로 업데이트하는 중입니다...${NC}"
+rustup update
+echo -e "${GREEN}Rust가 최신 버전으로 업데이트되었습니다.${NC}"
+echo
+
 # NVM 설치
 echo -e "${YELLOW}NVM을 설치하는 중입니다...${NC}"
 echo
@@ -185,11 +191,11 @@ fi
 
 read -p "Solana 주소를 입력하세요. 위에 초록색으로 나온 주소와 같습니다.: " solana_address
 read -p "Ethereum 개인키를 입력하세요: " ethereum_private_key
-read -p "트랜잭션 반복 횟수 입력 (1-5 추천): " repeat_count
+read -p "브릿징 트랜잭션 반복 횟수 입력 (1-5 추천): " repeat_count
 echo
 
 for ((i=1; i<=repeat_count; i++)); do
-    echo -e "${YELLOW}브리지 스크립트 실행 (트랜잭션 $i)...${NC}"
+    echo -e "${YELLOW}브릿징 스크립트 실행 (트랜잭션 $i)...${NC}"
     echo
     node bin/cli.js -k pvt-key.txt -d "$solana_address" -a 0.01 --sepolia
     echo
