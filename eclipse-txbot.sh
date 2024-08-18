@@ -1,24 +1,3 @@
-#!/bin/bash
-
-export RED='\033[0;31m'
-export GREEN='\033[0;32m'
-export YELLOW='\033[1;33m'
-export NC='\033[0m'
-
-prompt() {
-    local message="$1"
-    read -p "$message" input
-    echo "$input"
-}
-
-execute_and_prompt() {
-    local message="$1"
-    local command="$2"
-    echo -e "${YELLOW}${message}${NC}"
-    eval "$command"
-    echo -e "${GREEN}Done.${NC}"
-}
-
 # Rust 설치
 echo -e "${YELLOW}Rust를 설치하는 중입니다...${NC}"
 echo
@@ -87,7 +66,31 @@ if [ "$choice" -eq 1 ]; then
 elif [ "$choice" -eq 2 ]; then
     echo -e "${YELLOW}개인키를 사용하여 Solana 키페어를 복구하는 중입니다...${NC}"
     read -p "Solana 개인키를 입력하세요 (base58로 인코딩된 문자열): " solana_private_key
-    echo "$solana_private_key" | base58 -d > "$WALLET_FILE"
+
+    # Solana 개인키를 base58에서 바이너리로 변환
+    cat <<EOF > decode-private-key.js
+const { Keypair } = require('@solana/web3.js');
+const bs58 = require('bs58');
+const fs = require('fs');
+
+const privateKeyBase58 = "$solana_private_key";
+const privateKeyBytes = bs58.decode(privateKeyBase58);
+
+const keypair = Keypair.fromSecretKey(privateKeyBytes);
+fs.writeFileSync('$WALLET_FILE', JSON.stringify(Array.from(keypair.secretKey)), 'utf8');
+
+console.log('Solana 지갑 파일이 저장되었습니다:', '$WALLET_FILE');
+EOF
+
+    # 필요한 Node.js 패키지 설치
+    if ! npm list bs58 &>/dev/null; then
+        echo "bs58 패키지가 없습니다. 설치 중입니다..."
+        echo
+        npm install bs58
+        echo
+    fi
+
+    node decode-private-key.js
 else
     echo -e "${RED}잘못된 선택입니다. 종료합니다.${NC}"
     exit 1
