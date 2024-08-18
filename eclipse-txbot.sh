@@ -21,6 +21,7 @@ execute_and_prompt() {
 
 # Rust 설치
 echo -e "${YELLOW}Rust를 설치하는 중입니다...${NC}"
+echo
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
 echo -e "${GREEN}Rust가 설치되었습니다: $(rustc --version)${NC}"
@@ -28,6 +29,7 @@ echo
 
 # NVM 설치
 echo -e "${YELLOW}NVM을 설치하는 중입니다...${NC}"
+echo
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # NVM을 로드합니다
@@ -48,13 +50,20 @@ fi
 
 # 레포지토리 클론 및 npm 의존성 설치
 echo -e "${YELLOW}레포지토리를 클론하고 npm 의존성을 설치하는 중입니다...${NC}"
+echo
 git clone https://github.com/Eclipse-Laboratories-Inc/testnet-deposit
 cd testnet-deposit
+
+# 특정 버전의 bs58 패키지 설치
+echo -e "${YELLOW}bs58 패키지 버전 4.0.1을 설치하는 중입니다...${NC}"
+npm install bs58@4.0.1
+
 npm install
 echo
 
 # Solana CLI 설치
 echo -e "${YELLOW}Solana CLI를 설치하는 중입니다...${NC}"
+echo
 sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
@@ -66,7 +75,7 @@ echo -e "${YELLOW}옵션을 선택하세요:${NC}"
 echo -e "1) 새로운 Solana 지갑 생성"
 echo -e "2) 개인키로 Solana 지갑 복구"
 
-choice=$(prompt "선택지를 입력하세요 (1 또는 2): ")
+read -p "선택지를 입력하세요 (1 또는 2): " choice
 
 WALLET_FILE=~/my-wallet.json
 
@@ -82,7 +91,7 @@ if [ "$choice" -eq 1 ]; then
     echo -e "${YELLOW}이 시드 문구를 안전한 곳에 저장하세요. 향후 에어드랍이 있을 경우, 이 지갑으로부터 수령할 수 있습니다.${NC}"
 elif [ "$choice" -eq 2 ]; then
     echo -e "${YELLOW}개인키를 사용하여 Solana 키페어를 복구하는 중입니다...${NC}"
-    solana_private_key=$(prompt "Solana 개인키를 입력하세요 (base58로 인코딩된 문자열): ")
+    read -p "Solana 개인키를 입력하세요 (base58로 인코딩된 문자열): " solana_private_key
 
     # Solana 개인키를 base58에서 바이너리로 변환
     cat <<EOF > decode-private-key.cjs
@@ -90,20 +99,31 @@ const { Keypair } = require('@solana/web3.js');
 const bs58 = require('bs58');
 const fs = require('fs');
 
+// 환경 변수로부터 개인키를 가져옵니다.
 const privateKeyBase58 = process.env.SOLANA_PRIVATE_KEY;
+
+// base58 인코딩된 개인키를 디코딩하여 바이너리 형식으로 변환합니다.
 const privateKeyBytes = bs58.decode(privateKeyBase58);
+
+// 바이너리 형식의 개인키로부터 Keypair 객체를 생성합니다.
 const keypair = Keypair.fromSecretKey(privateKeyBytes);
+
+// 지갑 파일로 Keypair의 비밀키를 저장합니다.
 fs.writeFileSync(process.env.WALLET_FILE, JSON.stringify(Array.from(keypair.secretKey)), 'utf8');
 
 console.log('Solana 지갑 파일이 저장되었습니다:', process.env.WALLET_FILE);
 EOF
 
+    # 환경 변수 설정
     export SOLANA_PRIVATE_KEY="$solana_private_key"
     export WALLET_FILE="$WALLET_FILE"
 
+    # 필요한 Node.js 패키지 설치
     if ! npm list bs58 &>/dev/null; then
         echo "bs58 패키지가 없습니다. 설치 중입니다..."
-        npm install bs58
+        echo
+        npm install bs58@4.0.1
+        echo
     fi
 
     node decode-private-key.cjs
@@ -113,7 +133,8 @@ else
 fi
 
 # 시드 문구를 사용하여 Ethereum 개인키 도출
-mnemonic=$(prompt "메타마스크 복구문자를 입력하세요: ")
+read -p "메타마스크 복구문자를 입력하세요: " mnemonic
+echo
 
 cat << EOF > secrets.json
 {
@@ -139,8 +160,10 @@ EOF
 
 # ethers.js 설치 여부 확인 및 필요시 설치
 if ! npm list ethers &>/dev/null; then
-    echo "ethers.js가 없습니다. 설치 중입니다..."
-    npm install ethers
+  echo "ethers.js가 없습니다. 설치 중입니다..."
+  echo
+  npm install ethers
+  echo
 fi
 
 node derive-wallet.cjs
@@ -148,8 +171,10 @@ echo
 
 # Solana CLI 구성
 echo -e "${YELLOW}Solana CLI를 구성하는 중입니다...${NC}"
+echo
 solana config set --url https://testnet.dev2.eclipsenetwork.xyz/
 solana config set --keypair ~/my-wallet.json
+echo
 echo -e "${GREEN}Solana 주소: $(solana address)${NC}"
 echo
 
@@ -158,23 +183,28 @@ if [ -d "testnet-deposit" ]; then
     execute_and_prompt "testnet-deposit 폴더를 제거하는 중입니다..." "rm -rf testnet-deposit"
 fi
 
-solana_address=$(prompt "Solana 주소를 입력하세요: ")
-ethereum_private_key=$(prompt "Ethereum 개인키를 입력하세요: ")
-repeat_count=$(prompt "트랜잭션 반복 횟수 입력 (4-5 추천): ")
+read -p "Solana 주소를 입력하세요: " solana_address
+read -p "Ethereum 개인키를 입력하세요: " ethereum_private_key
+read -p "트랜잭션 반복 횟수 입력 (4-5 추천): " repeat_count
+echo
 
 for ((i=1; i<=repeat_count; i++)); do
     echo -e "${YELLOW}브리지 스크립트 실행 (트랜잭션 $i)...${NC}"
+    echo
     node bin/cli.js -k pvt-key.txt -d "$solana_address" -a 0.01 --sepolia
+    echo
     sleep 3
 done
 
 echo -e "${RED}4분 정도 소요됩니다. 아무 것도 하지 말고 기다리세요.${NC}"
-sleep 240
+echo
 
+sleep 240
 execute_and_prompt "토큰을 생성하는 중입니다..." "spl-token create-token --enable-metadata -p TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
 echo
 
 token_address=$(prompt "토큰 주소를 입력하세요: ")
+echo
 execute_and_prompt "토큰 계좌를 생성하는 중입니다..." "spl-token create-account $token_address"
 echo
 
