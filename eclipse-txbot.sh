@@ -94,7 +94,7 @@ else
 fi
 
 # 시드 문구를 사용하여 Ethereum 개인키 도출
-read -p "시드 문구를 입력하세요: " mnemonic
+read -p "메타마스크 복구문자를 입력하세요: " mnemonic
 echo
 
 cat << EOF > secrets.json
