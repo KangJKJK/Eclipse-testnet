@@ -189,7 +189,7 @@ if [ -d "testnet-deposit" ]; then
     execute_and_prompt "testnet-deposit 폴더를 제거하는 중입니다..." "rm -rf testnet-deposit"
 fi
 
-read -p "사용중인 Solana 주소를 입력하세요.: " solana_address
+read -p "위에 출력된 Solana 주소를 입력하세요.: " solana_address
 read -p "Ethereum 개인키를 입력하세요: " ethereum_private_key
 read -p "브릿징 트랜잭션 반복 횟수 입력 (1-5 추천): " repeat_count
 echo
@@ -255,7 +255,7 @@ execute_and_prompt "토큰을 생성하는 중입니다..." "spl-token create-to
 echo
 
 # 사용자 토큰 주소를 입력받음
-echo -e "${YELLOW}위에 출력된 Token address를 그대로 입력하세요.${NC}"
+echo -e "${YELLOW}사용자의 solana 주소를 입력하세요.${NC}"
 token_address=$(prompt "Enter your Token Address: ")
 echo
 
