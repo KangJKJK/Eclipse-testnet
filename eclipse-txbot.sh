@@ -197,21 +197,50 @@ for ((i=1; i<=repeat_count; i++)); do
 done
 
 echo -e "${RED}브릿징 컨펌을 위해 4분 정도 소요됩니다. 아무 것도 하지 말고 기다리세요.${NC}"
-sleep 240
+sleep 1
+
+echo -e "${YELLOW}Solana Hello World 레포지토리를 클론하는 중입니다...${NC}"
+echo
+git clone https://github.com/solana-labs/example-helloworld
+cd example-helloworld
+echo
+
+# 종속성 설치
+echo -e "${YELLOW}종속성 설치 중입니다...${NC}"
+npm install
+echo
+
+# 스마트 계약 빌드
+echo -e "${YELLOW}스마트 계약을 빌드하는 중입니다...${NC}"
+npm run build:program-rust
+echo
+
+# Eclipse Testnet에 스마트 계약 배포
+echo -e "${YELLOW}Eclipse Testnet에 스마트 계약을 배포하는 중입니다...${NC}"
+echo
+solana program deploy dist/program/helloworld.so
+echo
+
+# 계약이 성공적으로 배포되었는지 확인
+echo -e "${YELLOW}계약이 성공적으로 배포되었는지 확인하는 중입니다...${NC}"
+echo
+npm run start
+echo
+
+# 홈 디렉토리로 이동
+cd $HOME
 
 # 토큰 생성
-echo -e "${YELLOW}토큰을 생성하는 중입니다...${NC}"
-TOKEN_CREATION_OUTPUT=$(spl-token create-token --enable-metadata -p TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
-echo "$TOKEN_CREATION_OUTPUT"
+execute_and_prompt "토큰을 생성하는 중입니다..." "spl-token create-token --enable-metadata -p TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+echo
 
-# 토큰 주소 추출
-echo -e "${YELLOW}토큰 주소를 추출하는 중입니다...${NC}"
-TOKEN_ADDRESS=$(echo "$TOKEN_CREATION_OUTPUT" | grep -oP '(?<=Token Address: )\S+')
-echo "토큰 주소: $TOKEN_ADDRESS"
+token_address=$(prompt "Enter your Token Address: ")
+echo
 
 # 토큰 어카운트 생성
 echo -e "${YELLOW}토큰 어카운트를 생성하는 중입니다...${NC}"
 execute_and_prompt "토큰 어카운트를 생성하는 중입니다..." "spl-token create-account $TOKEN_ADDRESS"
+echo
 
 # 토큰 발행
 echo -e "${YELLOW}토큰을 발행하는 중입니다...${NC}"
