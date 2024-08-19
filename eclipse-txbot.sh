@@ -62,7 +62,7 @@ npm install bs58@4.0.1
 echo
 
 # Solana CLI 제거
-echo -e "${YELLOW}Solana CLI를 제거하는 중입니다...${NC}"
+echo -e "${YELLOW}개발환경에 맞는 CLI 설치를 위해 기존 Solana CLI를 제거하는 중입니다...${NC}"
 echo
 rm -rf ~/.local/share/solana
 
