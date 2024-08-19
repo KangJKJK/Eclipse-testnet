@@ -254,8 +254,8 @@ cd $HOME
 execute_and_prompt "토큰을 생성하는 중입니다..." "spl-token create-token --enable-metadata -p TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
 echo
 
-# 사용자 토큰 주소를 입력받음
-echo -e "${YELLOW}사용자의 solana 주소를 입력하세요.${NC}"
+# Token address를 입력받음
+echo -e "${YELLOW}위에나온 Token Address를 그대로 입력하세요.${NC}"
 token_address=$(prompt "Enter your Token Address: ")
 echo
 
